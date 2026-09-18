@@ -40,3 +40,4 @@ while True:
         print("")
         print(f"cena celeho nakupu: {celacena}$")
     elif menu == 2:
+        print("")

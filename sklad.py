@@ -8,14 +8,12 @@ sklad = {"jablko":{"cena":0.5,
                   "pocet":300}
    }
 while True:
-    print("co chces spravit?\n1 = pridat na sklad\n2 = kupit")
+    print("co chces spravit?\n1 = pridat na sklad\n2 = kupic\nkonec = konec")
     menu = input()
-    while menu != "1" and menu != "2":
-        print("musis zadat cislo 1 alebo 2")
-        menu = input()
-    menu = int(menu)
-    if menu == 1:
-        print("co chces pridat na kosik? ")
+    
+    
+    if menu == "1":
+        print("co chces pridat na sklad? ")
         item = input()
         if item.lower() == "nic":
             break
@@ -35,13 +33,52 @@ while True:
                 print("musis zadat pocet cislom")
         sklad[item] = {"cena": cena,
                     "pocet":pocet}
+        print("<===>")
         print("sklad bol aktualizovany")
-        for i in sklad:
-            print(i)
-    
+        print("<===>")
+        c = 1
+        for a,s in sklad.items():
+            
+            print(f"{c}. - {a}\n     {s["cena"]}$\n     {s["pocet"]}ks")
+            c += 1
+    elif menu == "2":
+        print("co chces kupic?")
+        item = input()
+        while item not in sklad:
+            print("mozes kupic lenb daco co je na sklade")
+            print("na zozname je len toto:")
+            for i in sklad.items():
+                print("  ",i)
+            print("co teda chces kupic?")
+            item = input()
+        print(f"na sklade je: {sklad[item]["pocet"]} kusov z polozky {item}")
+        while True:
+            print(f"kolko {item} chces kupic?")
+            pocet = input()
+            if pocet.isdigit():
+                pocet = int(pocet)
+                if pocet > sklad[item]["pocet"]:
+                    print(f"musis zadat cislo mensie asko {sklad[item]["pocet"]+1}")
+                else:
+                    break
+            else:
+                print("musis zadat cislo")
+        sklad[item]["pocet"] -= pocet
+        print("<===>")
+        print("sklad bol aktualizovany")
+        print("<===>")
+        c = 1
+        for a,s in sklad.items():
+            print(f"{c}. - {a}\n     {s["cena"]}$\n     {s["pocet"]}ks")
+            c += 1
+        print("<===>")
+    elif menu == "konec":
+        print("dakujem za vas nakup, skllad sa zatvara")
+        break
+    else:
+        print("musis zadac bud 1,2 alebo konec ty neamdertalec")
 
-
-
-
-
-    
+                
+        
+                     
+           

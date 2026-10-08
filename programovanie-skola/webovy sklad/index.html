@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="sk">
+<head>
+    <meta charset="UTF-8">
+    <title>Sklad</title>
+</head>
+<body>
+    <h1>Internetový Sklad</h1>
+
+    <h3>Kúpiť tovar</h3>
+    <form action="/kupit" method="get">
+        <label>Vyber produkt:</label><br>
+        <select name="produkt" id="produktSelect" onchange="aktualizujSlider()">
+            <!-- Sem JavaScript automaticky natiahne položky zo skladu -->
+        </select>
+        <br><br>
+
+        <label>Počet kusov na kúpu: <span id="sliderValue">1</span></label><br>
+        <input type="range" name="mnozstvo" id="mnozstvoSlider" min="1" max="1" value="1" oninput="zmenHodnotu(this.value)">
+        <br><br>
+
+        <button type="submit">Kúpiť</button>
+    </form>
+
+    <script>
+        let skladData = {};
+
+        // Keď sa stránka načíta, stiahneme dáta zo skladu cez /sklad endpoint
+        window.onload = async function() {
+            let response = await fetch('/sklad');
+            skladData = await response.json();
+            
+            let select = document.getElementById('produktSelect');
+            select.innerHTML = "";
+
+            for (let produkt in skladData) {
+                let option = document.createElement('option');
+                option.value = produkt;
+                option.textContent = `${produkt} (Cena: ${skladData[produkt].cena}€, Skladom: ${skladData[produkt].pocet})`;
+                select.appendChild(option);
+            }
+            aktualizujSlider();
+        };
+
+        // Keď zmeníš produkt v menu, slider sa prispôsobí maximálnemu počtu na sklade
+        function aktualizujSlider() {
+            let select = document.getElementById('produktSelect');
+            let zvolenyProdukt = select.value;
+            let slider = document.getElementById('mnozstvoSlider');
+            
+            if (skladData[zvolenyProdukt]) {
+                let maxPocet = skladData[zvolenyProdukt].pocet;
+                slider.max = maxPocet > 0 ? maxPocet : 1;
+                slider.value = 1;
+                document.getElementById('sliderValue').textContent = slider.value;
+            }
+        }
+
+        // Live aktualizácia čísla vedľa slideru pri ťahaní
+        function zmenHodnotu(hodnota) {
+            document.getElementById('sliderValue').textContent = hodnota;
+        }
+    </script>
+</body>
+</html>
